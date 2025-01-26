@@ -90,7 +90,7 @@
                         // wholeImage.style.opacity = 1 - (index / shuffledPixels.length);
                         wholeImage.style.opacity = 0;
                         shuffledPixels[index].style.opacity = '0';
-                        setTimeout(() => fadeOutNextPixel(index + 1), 10);
+                        setTimeout(() => fadeOutNextPixel(index + 1), 1);
                     } else {
                         wholeImage.style.opacity = 0;
                         isDisassembled = true;
@@ -105,7 +105,7 @@
                     if (index < shuffledPixels.length) {
                         // wholeImage.style.opacity = index / shuffledPixels.length;
                         shuffledPixels[index].style.opacity = '1';
-                        setTimeout(() => fadeInNextPixel(index + 1),10);
+                        setTimeout(() => fadeInNextPixel(index + 1),1);
                     } else {
                         wholeImage.style.opacity = 1;
                         isDisassembled = false;
