@@ -21,8 +21,8 @@
         /* Контейнер для каждой картинки */
         .image-container {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 100px;
+            height: 100px;
             overflow: hidden;
             cursor: pointer;
         }
@@ -47,7 +47,7 @@
         /* Маленькие "пиксели" */
         .pixel {
             position: absolute;
-            background-size: 200px 200px;
+            background-size: 100px 100px;
             margin: 0;
             padding: 0;
             border: none;
@@ -120,8 +120,8 @@
     }
 
     function createPixels(container, gridX = 5, gridY = gridX) {
-        const containerWidth = 200;
-        const containerHeight = 200;
+        const containerWidth = 100;
+        const containerHeight = 100;
         const pixels = [];
         const pixelWidth = containerWidth / gridX;
         const pixelHeight = containerHeight / gridY;
