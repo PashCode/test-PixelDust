@@ -18,10 +18,8 @@
         }
         .pixel {
             position: absolute;
-            width: 40px;
-            height: 40px;
             background-size: 400px 400px;
-            transition: opacity 0.5s ease;
+            transition: opacity .3s ease;
         }
     </style>
 </head>
@@ -34,40 +32,50 @@
     const image = 'first-card.jpg';
     const container = document.getElementById('image-container');
     const wholeImage = document.getElementById('whole-image');
-    const pixelSize = 40;
-    const gridSize = 10;
-    const pixels = [];
+    const containerWidth = 400;
+    const containerHeight = 400;
 
-    function createPixels() {
-        for (let i = 0; i < gridSize * gridSize; i++) {
-            const pixel = document.createElement('div');
-            pixel.classList.add('pixel');
-            pixel.style.backgroundImage = `url(${image})`;
-            pixel.style.backgroundPosition = `-${(i % gridSize) * pixelSize}px -${Math.floor(i / gridSize) * pixelSize}px`;
-            pixel.style.left = `${(i % gridSize) * pixelSize}px`;
-            pixel.style.top = `${Math.floor(i / gridSize) * pixelSize}px`;
-            container.appendChild(pixel);
-            pixels.push(pixel);
+    function createPixels(gridX = 10, gridY = gridX) {
+        const pixels = [];
+        const pixelWidth = containerWidth / gridX;
+        const pixelHeight = containerHeight / gridY;
+
+        for (let y = 0; y < gridY; y++) {
+            for (let x = 0; x < gridX; x++) {
+                const pixel = document.createElement('div');
+                pixel.classList.add('pixel');
+                pixel.style.width = `${pixelWidth}px`;
+                pixel.style.height = `${pixelHeight}px`;
+                pixel.style.backgroundImage = `url(${image})`;
+                pixel.style.backgroundPosition = `-${x * pixelWidth}px -${y * pixelHeight}px`;
+                pixel.style.left = `${x * pixelWidth}px`;
+                pixel.style.top = `${y * pixelHeight}px`;
+                container.appendChild(pixel);
+                pixels.push(pixel);
+            }
         }
+
+        return pixels;
     }
+
+    const pixels = createPixels(7); // Можете легко менять количество пикселей
 
     function fadeOutAllPixels() {
         const shuffledPixels = pixels.sort(() => 0.5 - Math.random());
 
         function fadeNextPixel(index) {
             if (index < shuffledPixels.length) {
-                wholeImage.style.opacity = 0.1 - (index / shuffledPixels.length);
+                wholeImage.style.opacity = 0.01 - (index / shuffledPixels.length);
                 shuffledPixels[index].style.opacity = '0';
-                setTimeout(() => fadeNextPixel(index + 1));
+                setTimeout(() => fadeNextPixel(index + 1), 10);
             } else {
-                wholeImage.style.opacity = 0 + 'px';
+                wholeImage.style.opacity = 0;
             }
         }
 
         fadeNextPixel(0);
     }
 
-    createPixels();
     container.addEventListener('click', fadeOutAllPixels);
 </script>
 </body>
