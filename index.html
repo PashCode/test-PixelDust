@@ -2,116 +2,59 @@
 <html>
 <head>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /*min-height: 100vh;*/
-            background: #f0f0f0;
-            margin: 0;
-            overflow: hidden;
-        }
-        .shatter-container {
+        #image-container {
             position: relative;
-            width: 500px;
-            height: 500px;
-            background: url('hidden-card.jpg') no-repeat center/cover;
+            width: 400px;
+            height: 400px;
             cursor: pointer;
-            will-change: transform, opacity; /* Подготовка элементов для анимации */
         }
-        .shatter-piece {
+        .pixel {
             position: absolute;
-            background-size: 500px 500px;
-            transition: transform 0.15s, opacity 0.3s; /* Ограничиваем анимацию только этими свойствами */
-            will-change: transform, opacity; /* Подготовка для оптимизации */
+            width: 40px;
+            height: 40px;
+            background-size: 400px 400px;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
 <body>
-<div class="shatter-container"></div>
+<div id="image-container"></div>
 
 <script>
-    const container = document.querySelector('.shatter-container');
-    const cols = 8;
-    const rows = 8;
-    const width = 500;
-    const height = 500;
+    const image = 'hidden-card.jpg'; // Замените на свою картинку
+    const container = document.getElementById('image-container');
+    const pixelSize = 40;
+    const gridSize = 10;
+    const pixels = [];
 
-    let isShattered = false;
-    let pieces = [];
+    function createPixels() {
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const pixel = document.createElement('div');
+            pixel.classList.add('pixel');
+            pixel.style.backgroundImage = `url(${image})`;
+            pixel.style.backgroundPosition = `-${(i % gridSize) * pixelSize}px -${Math.floor(i / gridSize) * pixelSize}px`;
+            pixel.style.left = `${(i % gridSize) * pixelSize}px`;
+            pixel.style.top = `${Math.floor(i / gridSize) * pixelSize}px`;
+            container.appendChild(pixel);
+            pixels.push(pixel);
+        }
+    }
 
-    function createShatterPieces() {
-        container.innerHTML = ''; // Очистка контейнера перед созданием карточек
-        pieces = [];
+    function fadeOutAllPixels() {
+        const shuffledPixels = pixels.sort(() => 0.5 - Math.random());
 
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-                const piece = document.createElement('div');
-                piece.classList.add('shatter-piece');
-
-                piece.style.width = `${width / cols}px`;
-                piece.style.height = `${height / rows}px`;
-                piece.style.backgroundImage = `url('hidden-card.jpg')`;
-                piece.style.backgroundPosition = `-${col * (width / cols)}px -${row * (height / rows)}px`;
-
-                piece.style.left = `${col * (width / cols)}px`;
-                piece.style.top = `${row * (height / rows)}px`;
-
-                // Сохраняем начальные позиции для анимации сборки
-                pieces.push({
-                    element: piece,
-                    originalLeft: piece.style.left,
-                    originalTop: piece.style.top
-                });
-
-                container.appendChild(piece);
+        function fadeNextPixel(index) {
+            if (index < shuffledPixels.length) {
+                shuffledPixels[index].style.opacity = '0';
+                setTimeout(() => fadeNextPixel(index + 1));
             }
         }
+
+        fadeNextPixel(0);
     }
 
-    function shatterPieces() {
-        container.style.background = 'none'; // Убираем фон
-        const centerX = width / 2;
-        const centerY = height / 2;
-
-        pieces.forEach((piece) => {
-            const pieceX = parseInt(piece.originalLeft);
-            const pieceY = parseInt(piece.originalTop);
-
-            const angle = Math.atan2(pieceY - centerY, pieceX - centerX);
-            const distance = Math.random() * 150 + 150;
-
-            const translateX = Math.cos(angle) * distance;
-            const translateY = Math.sin(angle) * distance;
-
-            piece.element.style.transform = `translate(${translateX}px, ${translateY}px)`;
-            piece.element.style.opacity = '0';
-        });
-    }
-
-    function assemblePieces() {
-        pieces.forEach((piece) => {
-            piece.element.style.transform = 'translate(0, 0)';
-            piece.element.style.opacity = '1';
-        });
-
-        // Восстанавливаем фон после анимации
-        setTimeout(() => {
-            container.style.background = `url('hidden-card.jpg') no-repeat center/cover`;
-        }, 200);
-    }
-
-    // Создаем карточки при загрузке
-    createShatterPieces();
-
-    container.addEventListener('click', () => {
-        if (!isShattered) {
-            shatterPieces();
-        } else {
-            assemblePieces();
-        }
-        isShattered = !isShattered;
-    });
+    createPixels();
+    container.addEventListener('click', fadeOutAllPixels);
 </script>
 </body>
 </html>
