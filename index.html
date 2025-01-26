@@ -23,13 +23,13 @@
             height: 100%;
             /*object-fit: none;*/
             z-index: 10;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.1s ease;
         }
 
         .pixel {
             position: absolute;
             background-size: 200px 200px;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.1s ease;
         }
     </style>
 </head>
@@ -66,7 +66,7 @@
                     if ( index < shuffledPixels.length ) {
                         wholeImage.style.opacity = 1 / shuffledPixels.length;
                         shuffledPixels[ index ].style.opacity = '0';
-                        setTimeout( () => fadeOutNextPixel( index + 1 ), 10 );
+                        setTimeout( () => fadeOutNextPixel( index + 1 ) );
                     } else {
                         wholeImage.style.opacity = 0;
                         isDisassembled = true;
@@ -81,7 +81,7 @@
                     if ( index < shuffledPixels.length ) {
                         wholeImage.style.opacity = 1 / shuffledPixels.length;
                         shuffledPixels[ index ].style.opacity = '1';
-                        setTimeout( () => fadeInNextPixel( index + 1 ), 10 );
+                        setTimeout( () => fadeInNextPixel( index + 1 ) );
                     } else {
                         wholeImage.style.opacity = 1;
                         isDisassembled = false;
