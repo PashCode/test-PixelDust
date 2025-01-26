@@ -15,34 +15,33 @@
             position: relative;
             width: 500px;
             height: 500px;
+            background: url('hidden-card.jpg') no-repeat center/cover;
             cursor: pointer;
         }
         .shatter-piece {
             position: absolute;
             background-size: 500px 500px;
-            transition: all .3s ease-out;
+            transition: all 0.5s ease-out;
         }
     </style>
 </head>
 <body>
-<div class="shatter-container">
-    <img src="hidden-card.jpg" id="sourceImage" style="display:none;">
-</div>
+<div class="shatter-container"></div>
 
 <script>
     const container = document.querySelector('.shatter-container');
-    const sourceImage = document.getElementById('sourceImage');
+    const cols = 8;
+    const rows = 8;
+    const width = 500;
+    const height = 500;
+
     let isShattered = false;
     let pieces = [];
 
     function createShatterPieces() {
-        container.innerHTML = '';
-        const cols = 8;
-        const rows = 8;
-        const width = 500;
-        const height = 500;
-
+        container.innerHTML = ''; // Очистка контейнера перед созданием карточек
         pieces = [];
+
         for (let row = 0; row < rows; row++) {
             for (let col = 0; col < cols; col++) {
                 const piece = document.createElement('div');
@@ -50,16 +49,17 @@
 
                 piece.style.width = `${width / cols}px`;
                 piece.style.height = `${height / rows}px`;
-                piece.style.backgroundImage = `url(${sourceImage.src})`;
+                piece.style.backgroundImage = `url('hidden-card.jpg')`;
                 piece.style.backgroundPosition = `-${col * (width / cols)}px -${row * (height / rows)}px`;
 
                 piece.style.left = `${col * (width / cols)}px`;
                 piece.style.top = `${row * (height / rows)}px`;
 
+                // Сохраняем начальные позиции для анимации сборки
                 pieces.push({
                     element: piece,
-                    originalLeft: `${col * (width / cols)}px`,
-                    originalTop: `${row * (height / rows)}px`
+                    originalLeft: piece.style.left,
+                    originalTop: piece.style.top
                 });
 
                 container.appendChild(piece);
@@ -67,56 +67,47 @@
         }
     }
 
-    sourceImage.onload = createShatterPieces;
+    function shatterPieces() {
+        container.style.background = 'none'; // Убираем фон
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        pieces.forEach((piece) => {
+            const pieceX = parseInt(piece.originalLeft);
+            const pieceY = parseInt(piece.originalTop);
+
+            const angle = Math.atan2(pieceY - centerY, pieceX - centerX);
+            const distance = Math.random() * 200 + 100;
+
+            const translateX = Math.cos(angle) * distance;
+            const translateY = Math.sin(angle) * distance;
+
+            piece.element.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            piece.element.style.opacity = '0';
+        });
+    }
+
+    function assemblePieces() {
+        pieces.forEach((piece) => {
+            piece.element.style.transform = 'translate(0, 0)';
+            piece.element.style.opacity = '1';
+        });
+
+        // Восстанавливаем фон после анимации
+        setTimeout(() => {
+            container.style.background = `url('hidden-card.jpg') no-repeat center/cover`;
+        }, 500);
+    }
+
+    // Создаем карточки при загрузке
+    createShatterPieces();
 
     container.addEventListener('click', () => {
         if (!isShattered) {
-            pieces.forEach((piece, index) => {
-                const centerX = 250;
-                const centerY = 150;
-                const pieceX = parseInt(piece.originalLeft);
-                const pieceY = parseInt(piece.originalTop);
-
-                const angle = Math.atan2(pieceY - centerY, pieceX - centerX);
-                const distance = Math.random() * 300 + 200;
-
-                const translateX = Math.cos(angle) * distance;
-                const translateY = Math.sin(angle) * distance;
-
-                piece.element.style.transform = `translate(${translateX}px, ${translateY}px)`;
-                piece.element.style.opacity = '0';
-            });
-
-            setTimeout(() => {
-                pieces.forEach(piece => piece.element.remove());
-                pieces = [];
-            }, 400);
+            shatterPieces();
         } else {
-            createShatterPieces();
-            pieces.forEach((piece, index) => {
-                const centerX = 250;
-                const centerY = 150;
-                const pieceX = parseInt(piece.originalLeft);
-                const pieceY = parseInt(piece.originalTop);
-
-                const angle = Math.atan2(pieceY - centerY, pieceX - centerX);
-                const distance = Math.random() * 300 + 200;
-
-                const translateX = Math.cos(angle) * distance;
-                const translateY = Math.sin(angle) * distance;
-
-                piece.element.style.transform = `translate(${translateX}px, ${translateY}px)`;
-                piece.element.style.opacity = '0';
-            });
-
-            setTimeout(() => {
-                pieces.forEach((piece, index) => {
-                    piece.element.style.transform = 'translate(0, 0)';
-                    piece.element.style.opacity = '1';
-                });
-            }, 50);
+            assemblePieces();
         }
-
         isShattered = !isShattered;
     });
 </script>
