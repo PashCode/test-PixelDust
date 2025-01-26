@@ -13,15 +13,15 @@
         }
         .shatter-container {
             position: relative;
-            width: 250px;
-            height: 250px;
+            width: 500px;
+            height: 500px;
             background: url('hidden-card.jpg') no-repeat center/cover;
             cursor: pointer;
             will-change: transform, opacity; /* Подготовка элементов для анимации */
         }
         .shatter-piece {
             position: absolute;
-            background-size: 250px 250px;
+            background-size: 500px 500px;
             transition: transform 0.3s, opacity 0.3s; /* Ограничиваем анимацию только этими свойствами */
             will-change: transform, opacity; /* Подготовка для оптимизации */
         }
@@ -34,8 +34,8 @@
     const container = document.querySelector('.shatter-container');
     const cols = 8;
     const rows = 8;
-    const width = 250;
-    const height = 250;
+    const width = 500;
+    const height = 500;
 
     let isShattered = false;
     let pieces = [];
