@@ -17,11 +17,13 @@
             height: 250px;
             background: url('hidden-card.jpg') no-repeat center/cover;
             cursor: pointer;
+            will-change: transform, opacity; /* Подготовка элементов для анимации */
         }
         .shatter-piece {
             position: absolute;
             background-size: 250px 250px;
-            transition: all 0.3s;
+            transition: transform 0.3s, opacity 0.3s; /* Ограничиваем анимацию только этими свойствами */
+            will-change: transform, opacity; /* Подготовка для оптимизации */
         }
     </style>
 </head>
