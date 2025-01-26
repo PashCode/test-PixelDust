@@ -21,8 +21,8 @@
         /* Контейнер для каждой картинки */
         .image-container {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 200px;
+            height: 200px;
             overflow: hidden;
             cursor: pointer;
         }
@@ -47,7 +47,7 @@
         /* Маленькие "пиксели" */
         .pixel {
             position: absolute;
-            background-size: 100px 100px;
+            background-size: 200px 200px;
             margin: 0;
             padding: 0;
             border: none;
@@ -78,7 +78,7 @@
         wholeImage.classList.add('whole-image');
         container.appendChild(wholeImage);
 
-        const pixels = createPixels(container, 6);
+        const pixels = createPixels(container, 5);
         let isDisassembled = false;
 
         function togglePixelFade() {
@@ -89,7 +89,7 @@
                     if (index < shuffledPixels.length) {
                         wholeImage.style.opacity = 1 - (index / shuffledPixels.length);
                         shuffledPixels[index].style.opacity = '0';
-                        setTimeout(() => fadeOutNextPixel(index + 1), 1);
+                        setTimeout(() => fadeOutNextPixel(index + 1), 10);
                     } else {
                         wholeImage.style.opacity = 0;
                         isDisassembled = true;
@@ -104,7 +104,7 @@
                     if (index < shuffledPixels.length) {
                         wholeImage.style.opacity = index / shuffledPixels.length;
                         shuffledPixels[index].style.opacity = '1';
-                        setTimeout(() => fadeInNextPixel(index + 1), 1);
+                        setTimeout(() => fadeInNextPixel(index + 1), 10);
                     } else {
                         wholeImage.style.opacity = 1;
                         isDisassembled = false;
