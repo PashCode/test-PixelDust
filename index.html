@@ -64,7 +64,7 @@
 
                 function fadeOutNextPixel( index ) {
                     if ( index < shuffledPixels.length ) {
-                        wholeImage.style.opacity = 1 / shuffledPixels.length;
+                        wholeImage.style.opacity = index / shuffledPixels.length;
                         shuffledPixels[ index ].style.opacity = '0';
                         setTimeout( () => fadeOutNextPixel( index + 1 ) );
                     } else {
@@ -79,7 +79,7 @@
 
                 function fadeInNextPixel( index ) {
                     if ( index < shuffledPixels.length ) {
-                        wholeImage.style.opacity = 1 / shuffledPixels.length;
+                        wholeImage.style.opacity = index / shuffledPixels.length;
                         shuffledPixels[ index ].style.opacity = '1';
                         setTimeout( () => fadeInNextPixel( index + 1 ) );
                     } else {
