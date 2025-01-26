@@ -22,7 +22,7 @@
         .shatter-piece {
             position: absolute;
             background-size: 500px 500px;
-            transition: transform 0.3s, opacity 0.3s; /* Ограничиваем анимацию только этими свойствами */
+            transition: transform 0.15s, opacity 0.3s; /* Ограничиваем анимацию только этими свойствами */
             will-change: transform, opacity; /* Подготовка для оптимизации */
         }
     </style>
@@ -79,7 +79,7 @@
             const pieceY = parseInt(piece.originalTop);
 
             const angle = Math.atan2(pieceY - centerY, pieceX - centerX);
-            const distance = Math.random() * 50 + 100;
+            const distance = Math.random() * 150 + 150;
 
             const translateX = Math.cos(angle) * distance;
             const translateY = Math.sin(angle) * distance;
@@ -98,7 +98,7 @@
         // Восстанавливаем фон после анимации
         setTimeout(() => {
             container.style.background = `url('hidden-card.jpg') no-repeat center/cover`;
-        }, 300);
+        }, 200);
     }
 
     // Создаем карточки при загрузке
