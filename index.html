@@ -21,7 +21,7 @@
         .shatter-piece {
             position: absolute;
             background-size: 500px 500px;
-            transition: all 0.5s ease-out;
+            transition: all 0.3s;
         }
     </style>
 </head>
@@ -96,7 +96,7 @@
         // Восстанавливаем фон после анимации
         setTimeout(() => {
             container.style.background = `url('hidden-card.jpg') no-repeat center/cover`;
-        }, 500);
+        }, 300);
     }
 
     // Создаем карточки при загрузке
