@@ -2,81 +2,131 @@
 <html>
 <head>
     <style>
-        #image-container {
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 600px;
+            margin: 0 auto;
+        }
+
+        .image-container {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: 200px;
+            height: 200px;
             cursor: pointer;
         }
-        #whole-image {
+
+        .whole-image {
             position: absolute;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: fill;
             z-index: 10;
             transition: opacity 0.5s ease;
         }
+
         .pixel {
             position: absolute;
-            background-size: 400px 400px;
-            transition: opacity .3s ease;
+            background-size: 200px 200px;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
 <body>
-<div id="image-container">
-    <img id="whole-image" src="first-card.jpg" alt="Image">
-</div>
+<div class="cards-container" id="cards-container"></div>
 
 <script>
-    const image = 'first-card.jpg';
-    const container = document.getElementById('image-container');
-    const wholeImage = document.getElementById('whole-image');
-    const containerWidth = 400;
-    const containerHeight = 400;
+    const cards = [
+        'first-card.jpg',
+        'second-card.jpg',
+        'third-card.jpg',
+        'fourth-card.jpg',
+        'fifth-card.jpg',
+        'sixth-card.jpg',
+    ];
 
-    function createPixels(gridX = 10, gridY = gridX) {
+    function createCardWithPixelFade( imageSrc ) {
+        const container = document.createElement( 'div' );
+        container.classList.add( 'image-container' );
+
+        const wholeImage = document.createElement( 'img' );
+        wholeImage.src = imageSrc;
+        wholeImage.classList.add( 'whole-image' );
+        container.appendChild( wholeImage );
+
+        const pixels = createPixels( container, 5 );
+        let isDisassembled = false;
+
+        function togglePixelFade() {
+            if ( !isDisassembled ) {
+                const shuffledPixels = pixels.sort( () => 0.5 - Math.random() );
+
+                function fadeOutNextPixel( index ) {
+                    if ( index < shuffledPixels.length ) {
+                        wholeImage.style.opacity = 1 / shuffledPixels.length;
+                        shuffledPixels[ index ].style.opacity = '0';
+                        setTimeout( () => fadeOutNextPixel( index + 1 ), 10 );
+                    } else {
+                        wholeImage.style.opacity = 0;
+                        isDisassembled = true;
+                    }
+                }
+
+                fadeOutNextPixel( 0 );
+            } else {
+                const shuffledPixels = pixels.sort( () => 0.5 - Math.random() );
+
+                function fadeInNextPixel( index ) {
+                    if ( index < shuffledPixels.length ) {
+                        wholeImage.style.opacity = 1 / shuffledPixels.length;
+                        shuffledPixels[ index ].style.opacity = '1';
+                        setTimeout( () => fadeInNextPixel( index + 1 ), 10 );
+                    } else {
+                        wholeImage.style.opacity = 1;
+                        isDisassembled = false;
+                    }
+                }
+
+                fadeInNextPixel( 0 );
+            }
+        }
+
+        container.addEventListener( 'click', togglePixelFade );
+        return container;
+    }
+
+    function createPixels( container, gridX = 5, gridY = gridX ) {
+        const containerWidth = 200;
+        const containerHeight = 200;
         const pixels = [];
         const pixelWidth = containerWidth / gridX;
         const pixelHeight = containerHeight / gridY;
+        const imageSrc = container.querySelector( '.whole-image' ).src;
 
-        for (let y = 0; y < gridY; y++) {
-            for (let x = 0; x < gridX; x++) {
-                const pixel = document.createElement('div');
-                pixel.classList.add('pixel');
-                pixel.style.width = `${pixelWidth}px`;
-                pixel.style.height = `${pixelHeight}px`;
-                pixel.style.backgroundImage = `url(${image})`;
-                pixel.style.backgroundPosition = `-${x * pixelWidth}px -${y * pixelHeight}px`;
-                pixel.style.left = `${x * pixelWidth}px`;
-                pixel.style.top = `${y * pixelHeight}px`;
-                container.appendChild(pixel);
-                pixels.push(pixel);
+        for ( let y = 0; y < gridY; y++ ) {
+            for ( let x = 0; x < gridX; x++ ) {
+                const pixel = document.createElement( 'div' );
+                pixel.classList.add( 'pixel' );
+                pixel.style.width = `${ pixelWidth }px`;
+                pixel.style.height = `${ pixelHeight }px`;
+                pixel.style.backgroundImage = `url(${ imageSrc })`;
+                pixel.style.backgroundPosition = `-${ x * pixelWidth }px -${ y * pixelHeight }px`;
+                pixel.style.left = `${ x * pixelWidth }px`;
+                pixel.style.top = `${ y * pixelHeight }px`;
+                container.appendChild( pixel );
+                pixels.push( pixel );
             }
         }
 
         return pixels;
     }
 
-    const pixels = createPixels(5); // Можете легко менять количество пикселей
-
-    function fadeOutAllPixels() {
-        const shuffledPixels = pixels.sort(() => 0.5 - Math.random());
-
-        function fadeNextPixel(index) {
-            if (index < shuffledPixels.length) {
-                wholeImage.style.opacity = 0.01 - (index / shuffledPixels.length);
-                shuffledPixels[index].style.opacity = '0';
-                setTimeout(() => fadeNextPixel(index + 1), 10);
-            } else {
-                wholeImage.style.opacity = 0;
-            }
-        }
-
-        fadeNextPixel(0);
-    }
-
-    container.addEventListener('click', fadeOutAllPixels);
+    const cardsContainer = document.getElementById( 'cards-container' );
+    cards.forEach( card => {
+        const cardElement = createCardWithPixelFade( card );
+        cardsContainer.appendChild( cardElement );
+    } );
 </script>
 </body>
 </html>
